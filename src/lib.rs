@@ -17,13 +17,14 @@ macro_rules! impl_tuple_parse {
     ($($T:ident)*) => {
         impl<$($T,)*> ParseTuple for ( $($T,)* )
         where
-            $( $T: core::str::FromStr, )*
-            $( $T::Err: std::error::Error + Send + Sync + 'static, )*
+            $( $T: ::core::str::FromStr, )*
+            $( ::anyhow::Error: From<<$T as ::core::str::FromStr>::Err>, )*
         {
             fn parse(input: &str) -> anyhow::Result<Self> {
                 use itertools::Itertools;
+                use anyhow::Context;
                 #[allow(non_snake_case)]
-                let ($($T,)*) = input.split_whitespace().tuples().exactly_one().unwrap();
+                let ($($T,)*) = input.split_whitespace().collect_tuple().context("invalid number of items")?;
                 Ok((
                     $( $T.parse::<$T>()?, )*
                 ))
