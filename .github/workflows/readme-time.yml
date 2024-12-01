@@ -1,0 +1,17 @@
+name: Update readme ⏱️ time table
+
+on:
+    workflow_dispatch:
+
+jobs:
+    update-readme:
+        runs-on: ubuntu-latest
+        if: ${{ vars.AOC_ENABLED == 'true' }}
+        permissions:
+            contents: write
+        steps:
+            - uses: actions/checkout@v4
+            - run: cargo time --store
+            - uses: stefanzweifel/git-auto-commit-action@v5
+              with:
+                  commit_message: "⏱️ update readme time table"
