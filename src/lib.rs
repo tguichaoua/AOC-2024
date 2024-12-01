@@ -4,6 +4,26 @@ pub mod template;
 
 /* -------------------------------------------------------------------------- */
 
+/// Repeat a macro invocation passing 1 to 12 ident.
+macro_rules! for_tuple {
+    ( $macro:ident ) => {
+        $macro!(A);
+        $macro!(A B);
+        $macro!(A B C);
+        $macro!(A B C D);
+        $macro!(A B C D E);
+        $macro!(A B C D E F);
+        $macro!(A B C D E F G);
+        $macro!(A B C D E F G H);
+        $macro!(A B C D E F G H I);
+        $macro!(A B C D E F G H I J);
+        $macro!(A B C D E F G H I J K);
+        $macro!(A B C D E F G H I J K L);
+    };
+}
+
+/* -------------------------------------------------------------------------- */
+
 /// Parse a string into a tuple by splitting it by whitespaces.
 pub fn parse_tuple<T: ParseTuple>(input: &str) -> anyhow::Result<T> {
     <T as ParseTuple>::parse(input)
@@ -33,10 +53,6 @@ macro_rules! impl_tuple_parse {
     };
 }
 
-impl_tuple_parse!(A);
-impl_tuple_parse!(A B);
-impl_tuple_parse!(A B C);
-impl_tuple_parse!(A B C D);
-impl_tuple_parse!(A B C D E);
+for_tuple!(impl_tuple_parse);
 
 /* -------------------------------------------------------------------------- */
