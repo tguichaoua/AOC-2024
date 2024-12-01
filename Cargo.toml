@@ -32,6 +32,7 @@ glam = "0.29.2"
 itertools = "0.13.0"
 num = "0.4.3"
 regex = "1.11.1"
+anyhow = "1.0.93"
 
 
 [lints.clippy]
