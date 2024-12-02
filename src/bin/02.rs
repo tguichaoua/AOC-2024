@@ -2,16 +2,10 @@ use itertools::Itertools;
 
 advent_of_code::solution!(2);
 
-pub fn parse(input: &str) -> Vec<Vec<u32>> {
+pub fn parse(input: &str) -> impl Iterator<Item: Iterator<Item = u32>> + '_ {
     input
         .lines()
-        .map(|line| {
-            line.split_whitespace()
-                .map(core::str::FromStr::from_str)
-                .try_collect()
-                .unwrap()
-        })
-        .collect()
+        .map(|line| line.split_whitespace().map(|n| n.parse().unwrap()))
 }
 
 fn check_value(cmp: core::cmp::Ordering) -> impl Fn((u32, u32)) -> bool {
@@ -41,12 +35,14 @@ fn is_report_safe(report: impl IntoIterator<Item = u32>) -> bool {
 pub fn part_one(input: &str) -> Option<u32> {
     let reports = parse(input);
 
-    let are_safe = reports
-        .iter()
-        .filter(|report| is_report_safe(report.iter().copied()))
-        .count();
+    let mut are_safe = 0;
+    for report in reports {
+        if is_report_safe(report) {
+            are_safe += 1;
+        }
+    }
 
-    Some(are_safe.try_into().unwrap())
+    Some(are_safe)
 }
 
 pub fn part_two(input: &str) -> Option<u32> {
@@ -54,7 +50,9 @@ pub fn part_two(input: &str) -> Option<u32> {
 
     let mut are_safe = 0;
 
-    for report in &reports {
+    for report in reports {
+        let report = report.collect_vec();
+
         // Note: brute force
         for i in 0..report.len() {
             let head = &report[..i];
