@@ -1,18 +1,17 @@
-use advent_of_code::parse_tuple;
-use itertools::Itertools;
-
 advent_of_code::solution!(1);
 
-fn parse(input: &str) -> (Vec<u32>, Vec<u32>) {
-    input
-        .lines()
-        .map(parse_tuple::<(u32, u32)>)
-        .try_collect()
-        .unwrap()
+fn parse(input: &str) -> impl Iterator<Item = (u32, u32)> + '_ {
+    input.lines().map(|line| {
+        let (l, r) = line.split_once("   ").unwrap();
+        let l: u32 = l.parse().unwrap();
+        let r: u32 = r.parse().unwrap();
+
+        (l, r)
+    })
 }
 
 pub fn part_one(input: &str) -> Option<u32> {
-    let (mut a, mut b) = parse(input);
+    let (mut a, mut b) = parse(input).collect::<(Vec<_>, Vec<_>)>();
 
     a.sort_unstable();
     b.sort_unstable();
@@ -23,31 +22,19 @@ pub fn part_one(input: &str) -> Option<u32> {
 }
 
 pub fn part_two(input: &str) -> Option<u32> {
-    let (a, b) = parse(input);
+    let values = parse(input);
 
-    struct Count {
-        in_a: u32,
-        in_b: u32,
+    let mut left = Vec::new();
+    let mut right = std::collections::HashMap::new();
+
+    for (l, r) in values {
+        left.push(l);
+        *right.entry(r).or_insert(0) += 1;
     }
 
-    let mut counts = std::collections::HashMap::new();
-
-    for n in a {
-        match counts.entry(n) {
-            std::collections::hash_map::Entry::Occupied(mut occupied_entry) => {
-                let entry: &mut Count = occupied_entry.get_mut();
-                entry.in_a += 1;
-            }
-            std::collections::hash_map::Entry::Vacant(vacant_entry) => {
-                let in_b: u32 = b.iter().filter(|&&b| b == n).count().try_into().unwrap();
-                vacant_entry.insert(Count { in_a: 1, in_b });
-            }
-        }
-    }
-
-    let score = counts
-        .into_iter()
-        .map(|(n, Count { in_a, in_b })| n * in_a * in_b)
+    let score = left
+        .iter()
+        .map(|l| l * right.get(l).copied().unwrap_or(0))
         .sum();
 
     Some(score)
