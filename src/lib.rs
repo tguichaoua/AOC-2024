@@ -56,3 +56,62 @@ macro_rules! impl_tuple_parse {
 for_tuple!(impl_tuple_parse);
 
 /* -------------------------------------------------------------------------- */
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
+pub enum Dir {
+    Up,
+    Right,
+    Down,
+    Left,
+}
+
+impl Dir {
+    #[must_use]
+    #[inline]
+    pub fn rotated_clockwise(self) -> Dir {
+        match self {
+            Dir::Up => Dir::Right,
+            Dir::Right => Dir::Down,
+            Dir::Down => Dir::Left,
+            Dir::Left => Dir::Up,
+        }
+    }
+
+    #[must_use]
+    #[inline]
+    pub fn rotated_anti_clockwise(self) -> Dir {
+        match self {
+            Dir::Up => Dir::Left,
+            Dir::Right => Dir::Up,
+            Dir::Down => Dir::Right,
+            Dir::Left => Dir::Down,
+        }
+    }
+
+    #[must_use]
+    #[inline]
+    pub fn opposite(self) -> Dir {
+        match self {
+            Dir::Up => Dir::Down,
+            Dir::Right => Dir::Left,
+            Dir::Down => Dir::Up,
+            Dir::Left => Dir::Right,
+        }
+    }
+
+    /// Returns a unit vector pointing in the direction.
+    ///
+    /// The positive directions are down for Y axis and right for X axis.
+    #[must_use]
+    #[inline]
+    pub fn as_vec_down_right(self) -> glam::IVec2 {
+        match self {
+            Dir::Up => glam::IVec2::new(0, -1),
+            Dir::Right => glam::IVec2::new(1, 0),
+            Dir::Down => glam::IVec2::new(0, 1),
+            Dir::Left => glam::IVec2::new(-1, 0),
+        }
+    }
+}
+
+/* -------------------------------------------------------------------------- */
