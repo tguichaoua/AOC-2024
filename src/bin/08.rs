@@ -1,34 +1,13 @@
 use std::collections::HashSet;
 
-use advent_of_code::contains_point;
-use glam::IVec2 as Pos;
+use advent_of_code::{ascii_map_size, parse_ascii_map};
 use itertools::Itertools;
 
 advent_of_code::solution!(8);
 
-fn parse(input: &str) -> (glam::IVec2, impl Iterator<Item = (Pos, u8)> + Clone + '_) {
-    debug_assert!(input.is_ascii());
-
-    let height = input.lines().count();
-    let width = input.lines().next().unwrap().len();
-
-    debug_assert!(input.lines().all(|line| line.len() == width));
-
-    let antennas = input.lines().enumerate().flat_map(|(y, line)| {
-        line.bytes()
-            .enumerate()
-            .filter(|&(_, freq)| (freq != b'.'))
-            .map(move |(x, freq)| (Pos::new(x.try_into().unwrap(), y.try_into().unwrap()), freq))
-    });
-
-    (
-        glam::ivec2(width.try_into().unwrap(), height.try_into().unwrap()),
-        antennas,
-    )
-}
-
 pub fn part_one(input: &str) -> Option<u32> {
-    let (map_size, antennas) = parse(input);
+    let map_size = ascii_map_size(input);
+    let antennas = parse_ascii_map(input);
 
     let antennas_couples = antennas
         .tuple_combinations()
@@ -37,14 +16,15 @@ pub fn part_one(input: &str) -> Option<u32> {
 
     let anti_nodes = antennas_couples
         .flat_map(|(a, b)| [2 * b - a, 2 * a - b])
-        .filter(|&pos| contains_point(map_size, pos))
+        .filter(|&pos| map_size.contains(pos))
         .collect::<HashSet<_>>();
 
     Some(anti_nodes.len().try_into().unwrap())
 }
 
 pub fn part_two(input: &str) -> Option<u32> {
-    let (map_size, antennas) = parse(input);
+    let map_size = ascii_map_size(input);
+    let antennas = parse_ascii_map(input);
 
     let antennas_couples = antennas
         .tuple_combinations()
@@ -62,7 +42,7 @@ pub fn part_two(input: &str) -> Option<u32> {
         for n in 0.. {
             let u = a + v * n;
 
-            if contains_point(map_size, u) {
+            if map_size.contains(u) {
                 anti_nodes.insert(u);
             } else {
                 break;
@@ -72,7 +52,7 @@ pub fn part_two(input: &str) -> Option<u32> {
         for n in 0.. {
             let u = b - v * n;
 
-            if contains_point(map_size, u) {
+            if map_size.contains(u) {
                 anti_nodes.insert(u);
             } else {
                 break;

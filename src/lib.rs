@@ -4,9 +4,56 @@ pub mod template;
 
 /* -------------------------------------------------------------------------- */
 
+pub use glam::{ivec2 as pos, IVec2 as Pos};
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
+pub struct MapSize(glam::IVec2);
+
+impl MapSize {
+    pub fn width(&self) -> i32 {
+        self.0.x
+    }
+
+    pub fn height(&self) -> i32 {
+        self.0.y
+    }
+
+    pub fn contains(&self, pos: Pos) -> bool {
+        pos.x >= 0 && pos.x < self.0.x && pos.y >= 0 && pos.y < self.0.y
+    }
+}
+
 #[inline]
-pub fn contains_point(size: glam::IVec2, point: glam::IVec2) -> bool {
-    (0..size.x).contains(&point.x) && (0..size.y).contains(&point.y)
+pub fn ascii_map_size(input: &str) -> MapSize {
+    debug_assert!(input.is_ascii());
+
+    let height = input.lines().count();
+    let width = input.lines().next().unwrap().len();
+
+    debug_assert!(
+        input.lines().all(|line| line.len() == width),
+        "some lines of `input` haven't the same length"
+    );
+
+    MapSize(glam::ivec2(
+        width.try_into().unwrap(),
+        height.try_into().unwrap(),
+    ))
+}
+
+#[inline]
+pub fn parse_ascii_map(input: &str) -> impl Iterator<Item = (Pos, u8)> + Clone + '_ {
+    debug_assert!(input.is_ascii());
+    input.lines().enumerate().flat_map(|(y, line)| {
+        let y: i32 = y.try_into().unwrap();
+        line.bytes()
+            .enumerate()
+            .filter(|&(_, b)| (b != b'.'))
+            .map(move |(x, b)| {
+                let x: i32 = x.try_into().unwrap();
+                (pos(x, y), b)
+            })
+    })
 }
 
 /* -------------------------------------------------------------------------- */

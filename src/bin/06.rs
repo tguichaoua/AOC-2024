@@ -1,6 +1,6 @@
 use std::{collections::HashSet, ops::ControlFlow};
 
-use advent_of_code::Dir;
+use advent_of_code::{ascii_map_size, parse_ascii_map, Dir, MapSize};
 use glam::IVec2 as Pos;
 
 advent_of_code::solution!(6);
@@ -8,45 +8,32 @@ advent_of_code::solution!(6);
 struct Input {
     obstacles: HashSet<Pos>,
     start_pos: Pos,
-    height: i32,
-    width: i32,
+    map_size: MapSize,
 }
 
 fn parse(input: &str) -> Input {
-    debug_assert!(input.is_ascii());
+    let map_size = ascii_map_size(input);
 
     let mut obstacles = HashSet::new();
     let mut start_pos = None;
 
-    input.lines().enumerate().for_each(|(y, line)| {
-        let y = y.try_into().unwrap();
-        line.bytes().enumerate().for_each(|(x, c)| {
-            let x = x.try_into().unwrap();
-            match c {
-                b'#' => {
-                    obstacles.insert(Pos::new(x, y));
-                }
-                b'^' => {
-                    debug_assert!(start_pos.is_none());
-                    start_pos = Some(Pos::new(x, y));
-                }
-                _ => {}
-            }
-        });
+    parse_ascii_map(input).for_each(|(pos, c)| match c {
+        b'#' => {
+            obstacles.insert(pos);
+        }
+        b'^' => {
+            debug_assert!(start_pos.is_none());
+            start_pos = Some(pos);
+        }
+        _ => {}
     });
-
-    let height = input.lines().count();
-    let width = input.lines().next().unwrap().len();
-
-    debug_assert!(input.lines().all(|l| l.len() == width));
 
     let start_pos = start_pos.expect("no guard pos");
 
     Input {
         obstacles,
         start_pos,
-        height: height.try_into().unwrap(),
-        width: width.try_into().unwrap(),
+        map_size,
     }
 }
 
@@ -56,8 +43,7 @@ fn parse(input: &str) -> Input {
 /// `false` if the guard leaves the map.
 fn explore(
     start_pos: Pos,
-    width: i32,
-    height: i32,
+    map_size: MapSize,
     is_obstacle: impl Fn(Pos) -> bool,
     mut visit: impl FnMut(Pos, Dir) -> ControlFlow<()>,
 ) -> bool {
@@ -74,10 +60,7 @@ fn explore(
         'walk_foward: loop {
             let next_pos = guard_pos + dir;
 
-            let is_outside =
-                !(0..width).contains(&next_pos.x) || !(0..height).contains(&next_pos.y);
-
-            if is_outside {
+            if !map_size.contains(next_pos) {
                 return false;
             }
 
@@ -98,16 +81,14 @@ pub fn part_one(input: &str) -> Option<u32> {
     let Input {
         obstacles,
         start_pos,
-        height,
-        width,
+        map_size,
     } = parse(input);
 
     let mut visited = HashSet::new();
 
     explore(
         start_pos,
-        width,
-        height,
+        map_size,
         |pos| obstacles.contains(&pos),
         |pos, _| {
             visited.insert(pos);
@@ -122,15 +103,13 @@ pub fn part_two(input: &str) -> Option<u32> {
     let Input {
         obstacles,
         start_pos,
-        height,
-        width,
+        map_size,
     } = parse(input);
 
     let mut visited = HashSet::new();
     explore(
         start_pos,
-        width,
-        height,
+        map_size,
         |pos| obstacles.contains(&pos),
         |pos, _| {
             visited.insert(pos);
@@ -148,8 +127,7 @@ pub fn part_two(input: &str) -> Option<u32> {
 
         let is_loop = explore(
             start_pos,
-            width,
-            height,
+            map_size,
             |pos| pos == new_obstacle || obstacles.contains(&pos),
             |pos, facing_direction| match states.insert((pos, facing_direction)) {
                 true => ControlFlow::Continue(()),
