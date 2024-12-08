@@ -4,6 +4,13 @@ pub mod template;
 
 /* -------------------------------------------------------------------------- */
 
+#[inline]
+pub fn contains_point(size: glam::IVec2, point: glam::IVec2) -> bool {
+    (0..size.x).contains(&point.x) && (0..size.y).contains(&point.y)
+}
+
+/* -------------------------------------------------------------------------- */
+
 /// Repeat a macro invocation passing 1 to 12 ident.
 macro_rules! for_tuple {
     ( $macro:ident ) => {
