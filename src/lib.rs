@@ -2,8 +2,11 @@ pub mod template;
 
 // Use this file to add helper functions and additional modules.
 
+pub mod array2d;
+
 /* -------------------------------------------------------------------------- */
 
+use array2d::Array2D;
 pub use glam::{ivec2 as pos, IVec2 as Pos};
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
@@ -166,6 +169,27 @@ impl Dir {
             Dir::Left => glam::IVec2::new(-1, 0),
         }
     }
+}
+
+/* -------------------------------------------------------------------------- */
+
+#[inline]
+pub fn ascii_array_2d(input: &str) -> Array2D<u8> {
+    ascii_array_2d_with(input, |x| x)
+}
+
+#[inline]
+pub fn ascii_array_2d_with<T>(input: &str, f: impl Fn(u8) -> T) -> Array2D<T> {
+    debug_assert!(input.is_ascii());
+
+    let rows_count = input.lines().count();
+    let columns_count = input.lines().next().unwrap().len();
+    let mut items = input.lines().flat_map(|line| line.bytes()).map(f);
+
+    Array2D::from_elem(
+        array2d::Size::from_rows_columns(rows_count, columns_count),
+        |_, _| items.next().unwrap(),
+    )
 }
 
 /* -------------------------------------------------------------------------- */
