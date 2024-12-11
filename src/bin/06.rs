@@ -3,7 +3,7 @@ use std::{collections::HashSet, ops::ControlFlow};
 use advent_of_code::{ascii_map_size, parse_ascii_map, Dir, MapSize};
 use glam::IVec2 as Pos;
 
-advent_of_code::solution!(6);
+advent_of_code::solution!();
 
 struct Input {
     obstacles: HashSet<Pos>,

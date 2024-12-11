@@ -3,7 +3,7 @@ use std::collections::{HashMap, VecDeque};
 use itertools::Itertools;
 use num::Integer;
 
-advent_of_code::solution!(11);
+advent_of_code::solution!();
 
 pub fn part_one(input: &str) -> Option<u64> {
     struct Stone {

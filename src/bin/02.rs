@@ -1,6 +1,6 @@
 use itertools::Itertools;
 
-advent_of_code::solution!(2);
+advent_of_code::solution!();
 
 pub fn parse(input: &str) -> impl Iterator<Item: Iterator<Item = u32>> + '_ {
     input

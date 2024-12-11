@@ -2,7 +2,7 @@ use std::collections::HashSet;
 
 use advent_of_code::ascii_array_2d_with;
 
-advent_of_code::solution!(10);
+advent_of_code::solution!();
 
 pub fn part_one(input: &str) -> Option<u32> {
     let map = ascii_array_2d_with(input, |n| {

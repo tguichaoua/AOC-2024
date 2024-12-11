@@ -1,4 +1,4 @@
-advent_of_code::solution!(1);
+advent_of_code::solution!();
 
 fn parse(input: &str) -> impl Iterator<Item = (u32, u32)> + '_ {
     input.lines().map(|line| {

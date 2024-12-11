@@ -3,7 +3,7 @@ use std::collections::HashSet;
 use advent_of_code::{ascii_map_size, parse_ascii_map};
 use itertools::Itertools;
 
-advent_of_code::solution!(8);
+advent_of_code::solution!();
 
 pub fn part_one(input: &str) -> Option<u32> {
     let map_size = ascii_map_size(input);

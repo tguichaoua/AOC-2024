@@ -1,4 +1,4 @@
-advent_of_code::solution!(3);
+advent_of_code::solution!();
 
 pub fn part_one(input: &str) -> Option<u32> {
     let re = regex::Regex::new(r"mul\((\d{1,3}),(\d{1,3})\)").unwrap();

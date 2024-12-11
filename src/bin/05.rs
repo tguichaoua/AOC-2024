@@ -1,6 +1,6 @@
 use itertools::Itertools;
 
-advent_of_code::solution!(5);
+advent_of_code::solution!();
 
 pub fn parse(
     input: &str,

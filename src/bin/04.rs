@@ -2,7 +2,7 @@ use std::{collections::HashSet, iter};
 
 use itertools::Itertools;
 
-advent_of_code::solution!(4);
+advent_of_code::solution!();
 
 pub fn part_one(input: &str) -> Option<u32> {
     // Let assume the input contains only ascii chars

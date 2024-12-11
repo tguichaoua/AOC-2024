@@ -1,6 +1,6 @@
 use num::Integer;
 
-advent_of_code::solution!(9);
+advent_of_code::solution!();
 
 pub fn part_one(input: &str) -> Option<u64> {
     let input = if input.len().is_even() {
