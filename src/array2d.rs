@@ -70,6 +70,7 @@ impl<T> Array2D<T> {
         self.items.iter_mut()
     }
 
+    /// `((row, column), item)`
     #[inline]
     pub fn iter_with_index(
         &self,
@@ -81,6 +82,7 @@ impl<T> Array2D<T> {
         })
     }
 
+    /// `((row, column), item)`
     #[inline]
     pub fn iter_mut_with_index(
         &mut self,
