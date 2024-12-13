@@ -193,3 +193,50 @@ pub fn ascii_array_2d_with<T>(input: &str, f: impl Fn(u8) -> T) -> Array2D<T> {
 }
 
 /* -------------------------------------------------------------------------- */
+
+/// Computes `num / denom` but returns [`None`] if `denom` is `0`
+/// or the result if not an integer.
+#[inline]
+pub fn int_div<T: num::Integer + Copy>(num: T, denom: T) -> Option<T> {
+    if denom == T::zero() {
+        return None;
+    }
+    if num % denom != T::zero() {
+        return None;
+    }
+    Some(num / denom)
+}
+
+/// Solves the following system where all values are integers.
+///
+/// Returns the solution in the form `(x1, x2)`,
+/// or [`None`] if there is no integer solution.
+///
+/// ```txt
+/// ┌    ┐   ┌    ┐ ┌      ┐
+/// │ x1 │   │ y1 │ │ a  b │
+/// │    │ = │    │ │      │
+/// │ x2 │   │ y2 │ │ c  d │
+/// └    ┘   └    ┘ └      ┘
+/// ```
+#[inline]
+pub fn int_linear_solve2<T: num::Integer + Copy>(
+    y1: T,
+    y2: T,
+    a: T,
+    b: T,
+    c: T,
+    d: T,
+) -> Option<(T, T)> {
+    let denom = a * d - b * c;
+
+    let x1 = y1 * d - y2 * b;
+    let x2 = y2 * a - y1 * c;
+
+    let x1 = int_div(x1, denom)?;
+    let x2 = int_div(x2, denom)?;
+
+    Some((x1, x2))
+}
+
+/* -------------------------------------------------------------------------- */
