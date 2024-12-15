@@ -169,6 +169,16 @@ impl Dir {
             Dir::Left => glam::IVec2::new(-1, 0),
         }
     }
+
+    #[inline]
+    pub fn is_horizontal(self) -> bool {
+        matches!(self, Dir::Left | Dir::Right)
+    }
+
+    #[inline]
+    pub fn is_vertical(self) -> bool {
+        matches!(self, Dir::Up | Dir::Down)
+    }
 }
 
 /* -------------------------------------------------------------------------- */
