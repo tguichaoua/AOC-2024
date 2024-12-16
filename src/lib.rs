@@ -6,7 +6,10 @@ pub mod array2d;
 
 /* -------------------------------------------------------------------------- */
 
+use std::cmp::Ordering;
+
 use array2d::Array2D;
+use glam::UVec2;
 pub use glam::{ivec2 as pos, IVec2 as Pos};
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
@@ -120,6 +123,14 @@ pub enum Dir {
     Right,
     Down,
     Left,
+}
+
+#[allow(non_upper_case_globals)]
+impl Dir {
+    pub const North: Dir = Dir::Up;
+    pub const East: Dir = Dir::Right;
+    pub const South: Dir = Dir::Down;
+    pub const West: Dir = Dir::Left;
 }
 
 impl Dir {
@@ -247,6 +258,13 @@ pub fn int_linear_solve2<T: num::Integer + Copy>(
     let x2 = int_div(x2, denom)?;
 
     Some((x1, x2))
+}
+
+/* -------------------------------------------------------------------------- */
+
+#[inline]
+pub fn cmp_uvec2(a: &UVec2, b: &UVec2) -> Ordering {
+    a.x.cmp(&b.x).then(a.y.cmp(&b.y))
 }
 
 /* -------------------------------------------------------------------------- */
