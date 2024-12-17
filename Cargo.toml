@@ -33,6 +33,7 @@ itertools = "0.13.0"
 num = "0.4.3"
 regex = "1.11.1"
 anyhow = "1.0.93"
+rayon = "1.10.0"
 
 
 [lints.clippy]
