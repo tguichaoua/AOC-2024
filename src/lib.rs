@@ -9,8 +9,8 @@ pub mod array2d;
 use std::cmp::Ordering;
 
 use array2d::Array2D;
-use glam::UVec2;
 pub use glam::{ivec2 as pos, IVec2 as Pos};
+use glam::{uvec2, UVec2};
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
 pub struct MapSize(glam::IVec2);
@@ -265,6 +265,44 @@ pub fn int_linear_solve2<T: num::Integer + Copy>(
 #[inline]
 pub fn cmp_uvec2(a: &UVec2, b: &UVec2) -> Ordering {
     a.x.cmp(&b.x).then(a.y.cmp(&b.y))
+}
+
+/* -------------------------------------------------------------------------- */
+
+#[inline]
+pub fn four_direction_bounded(
+    pos: glam::UVec2,
+    bounds: glam::UVec2,
+) -> impl Iterator<Item = glam::UVec2> {
+    let mut directions = [None; 4];
+
+    // left
+    if let Some(x) = pos.x.checked_sub(1) {
+        directions[0] = Some(uvec2(x, pos.y));
+    }
+
+    // top
+    if let Some(y) = pos.y.checked_sub(1) {
+        directions[1] = Some(uvec2(pos.x, y));
+    }
+
+    // right
+    {
+        let x = pos.x + 1;
+        if x < bounds.x {
+            directions[2] = Some(uvec2(x, pos.y));
+        }
+    }
+
+    // down
+    {
+        let y = pos.y + 1;
+        if y < bounds.y {
+            directions[3] = Some(uvec2(pos.x, y));
+        }
+    }
+
+    directions.into_iter().flatten()
 }
 
 /* -------------------------------------------------------------------------- */
