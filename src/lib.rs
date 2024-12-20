@@ -48,6 +48,21 @@ pub fn ascii_map_size(input: &str) -> MapSize {
     ))
 }
 
+#[inline]
+pub fn ascii_map_size_uvec2(input: &str) -> UVec2 {
+    debug_assert!(input.is_ascii());
+
+    let height = input.lines().count();
+    let width = input.lines().next().unwrap().len();
+
+    debug_assert!(
+        input.lines().all(|line| line.len() == width),
+        "some lines of `input` haven't the same length"
+    );
+
+    uvec2(width.try_into().unwrap(), height.try_into().unwrap())
+}
+
 // TODO: replace all occurance of this by `parse_ascii_map`
 #[inline]
 pub fn parse_ascii_map_ivec(input: &str) -> impl Iterator<Item = (Pos, u8)> + Clone + '_ {
