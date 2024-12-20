@@ -3,6 +3,7 @@ pub mod template;
 // Use this file to add helper functions and additional modules.
 
 pub mod array2d;
+pub mod points;
 
 /* -------------------------------------------------------------------------- */
 
@@ -68,13 +69,10 @@ pub fn parse_ascii_map(input: &str) -> impl Iterator<Item = (UVec2, u8)> + Clone
     debug_assert!(input.is_ascii());
     input.lines().enumerate().flat_map(|(y, line)| {
         let y: u32 = y.try_into().unwrap();
-        line.bytes()
-            .enumerate()
-            .filter(|&(_, b)| (b != b'.'))
-            .map(move |(x, b)| {
-                let x: u32 = x.try_into().unwrap();
-                (uvec2(x, y), b)
-            })
+        line.bytes().enumerate().map(move |(x, b)| {
+            let x: u32 = x.try_into().unwrap();
+            (uvec2(x, y), b)
+        })
     })
 }
 
@@ -322,7 +320,7 @@ pub fn four_directions_bounded(
 }
 
 #[inline]
-pub fn four_directions(pos: glam::UVec2) -> impl Iterator<Item = glam::UVec2> {
+pub fn four_directions(pos: glam::UVec2) -> impl Iterator<Item = glam::UVec2> + Clone {
     [pos.left(), pos.up(), Some(pos.right()), Some(pos.down())]
         .into_iter()
         .flatten()
