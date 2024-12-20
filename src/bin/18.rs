@@ -1,6 +1,6 @@
 use std::collections::{HashSet, VecDeque};
 
-use advent_of_code::four_direction_bounded;
+use advent_of_code::four_directions_bounded;
 use glam::{uvec2, UVec2};
 
 advent_of_code::solution!();
@@ -37,7 +37,7 @@ fn solve_one(input: &str, bounds: UVec2, fallen_bytes: usize) -> u32 {
     let walls: HashSet<_> = parse(input).take(fallen_bytes).collect();
 
     while let Some(explorer) = to_explore.pop_front() {
-        for pos in four_direction_bounded(explorer.pos, bounds) {
+        for pos in four_directions_bounded(explorer.pos, bounds) {
             if pos == goal {
                 return explorer.distance + 1;
             }
@@ -76,7 +76,7 @@ fn solve_two(input: &str, bounds: UVec2) -> String {
         visited.insert(uvec2(0, 0));
 
         while let Some(pos) = to_explore.pop() {
-            for pos in four_direction_bounded(pos, bounds) {
+            for pos in four_directions_bounded(pos, bounds) {
                 if pos == goal {
                     continue 'falling_bytes;
                 }

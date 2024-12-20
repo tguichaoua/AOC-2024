@@ -47,8 +47,9 @@ pub fn ascii_map_size(input: &str) -> MapSize {
     ))
 }
 
+// TODO: replace all occurance of this by `parse_ascii_map`
 #[inline]
-pub fn parse_ascii_map(input: &str) -> impl Iterator<Item = (Pos, u8)> + Clone + '_ {
+pub fn parse_ascii_map_ivec(input: &str) -> impl Iterator<Item = (Pos, u8)> + Clone + '_ {
     debug_assert!(input.is_ascii());
     input.lines().enumerate().flat_map(|(y, line)| {
         let y: i32 = y.try_into().unwrap();
@@ -58,6 +59,21 @@ pub fn parse_ascii_map(input: &str) -> impl Iterator<Item = (Pos, u8)> + Clone +
             .map(move |(x, b)| {
                 let x: i32 = x.try_into().unwrap();
                 (pos(x, y), b)
+            })
+    })
+}
+
+#[inline]
+pub fn parse_ascii_map(input: &str) -> impl Iterator<Item = (UVec2, u8)> + Clone + '_ {
+    debug_assert!(input.is_ascii());
+    input.lines().enumerate().flat_map(|(y, line)| {
+        let y: u32 = y.try_into().unwrap();
+        line.bytes()
+            .enumerate()
+            .filter(|&(_, b)| (b != b'.'))
+            .map(move |(x, b)| {
+                let x: u32 = x.try_into().unwrap();
+                (uvec2(x, y), b)
             })
     })
 }
@@ -270,7 +286,7 @@ pub fn cmp_uvec2(a: &UVec2, b: &UVec2) -> Ordering {
 /* -------------------------------------------------------------------------- */
 
 #[inline]
-pub fn four_direction_bounded(
+pub fn four_directions_bounded(
     pos: glam::UVec2,
     bounds: glam::UVec2,
 ) -> impl Iterator<Item = glam::UVec2> {
@@ -303,6 +319,44 @@ pub fn four_direction_bounded(
     }
 
     directions.into_iter().flatten()
+}
+
+#[inline]
+pub fn four_directions(pos: glam::UVec2) -> impl Iterator<Item = glam::UVec2> {
+    [pos.left(), pos.up(), Some(pos.right()), Some(pos.down())]
+        .into_iter()
+        .flatten()
+}
+
+/* -------------------------------------------------------------------------- */
+
+pub trait VecExt {
+    fn up(&self) -> Option<UVec2>;
+    fn down(&self) -> UVec2;
+    fn left(&self) -> Option<UVec2>;
+    fn right(&self) -> UVec2;
+}
+
+impl VecExt for UVec2 {
+    #[inline]
+    fn up(&self) -> Option<UVec2> {
+        self.y.checked_sub(1).map(|y| uvec2(self.x, y))
+    }
+
+    #[inline]
+    fn down(&self) -> UVec2 {
+        uvec2(self.x, self.y + 1)
+    }
+
+    #[inline]
+    fn left(&self) -> Option<UVec2> {
+        self.x.checked_sub(1).map(|x| uvec2(x, self.y))
+    }
+
+    #[inline]
+    fn right(&self) -> UVec2 {
+        uvec2(self.x + 1, self.y)
+    }
 }
 
 /* -------------------------------------------------------------------------- */

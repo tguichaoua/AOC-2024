@@ -1,13 +1,13 @@
 use std::collections::HashSet;
 
-use advent_of_code::{ascii_map_size, parse_ascii_map};
+use advent_of_code::{ascii_map_size, parse_ascii_map_ivec};
 use itertools::Itertools;
 
 advent_of_code::solution!();
 
 pub fn part_one(input: &str) -> Option<u32> {
     let map_size = ascii_map_size(input);
-    let antennas = parse_ascii_map(input);
+    let antennas = parse_ascii_map_ivec(input);
 
     let antennas_couples = antennas
         .tuple_combinations()
@@ -24,7 +24,7 @@ pub fn part_one(input: &str) -> Option<u32> {
 
 pub fn part_two(input: &str) -> Option<u32> {
     let map_size = ascii_map_size(input);
-    let antennas = parse_ascii_map(input);
+    let antennas = parse_ascii_map_ivec(input);
 
     let antennas_couples = antennas
         .tuple_combinations()

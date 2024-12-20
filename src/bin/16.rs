@@ -1,6 +1,6 @@
 use std::collections::{BTreeSet, HashMap, HashSet};
 
-use advent_of_code::{cmp_uvec2, parse_ascii_map, Dir};
+use advent_of_code::{cmp_uvec2, parse_ascii_map_ivec, Dir};
 use glam::UVec2;
 
 advent_of_code::solution!();
@@ -16,7 +16,7 @@ fn parse(input: &str) -> Input {
     let mut end_position = None;
     let mut walls = HashSet::new();
 
-    parse_ascii_map(input).for_each(|(pos, c)| {
+    parse_ascii_map_ivec(input).for_each(|(pos, c)| {
         let pos = pos.try_into().unwrap();
 
         match c {

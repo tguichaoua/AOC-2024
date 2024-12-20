@@ -1,6 +1,6 @@
 use std::collections::HashSet;
 
-use advent_of_code::{parse_ascii_map, Dir};
+use advent_of_code::{parse_ascii_map_ivec, Dir};
 use glam::{uvec2, UVec2};
 
 advent_of_code::solution!();
@@ -23,7 +23,7 @@ fn parse_one(
     let mut box_positions = HashSet::new();
     let mut walls = HashSet::new();
 
-    parse_ascii_map(map).for_each(|(pos, c)| {
+    parse_ascii_map_ivec(map).for_each(|(pos, c)| {
         let pos = pos.try_into().unwrap();
         match c {
             b'#' => {
@@ -119,7 +119,7 @@ fn parse_two(
     let mut box_positions = HashSet::new();
     let mut walls = HashSet::new();
 
-    parse_ascii_map(map).for_each(|(pos, c)| {
+    parse_ascii_map_ivec(map).for_each(|(pos, c)| {
         let mut pos: UVec2 = pos.try_into().unwrap();
         pos.x *= 2;
 

@@ -1,6 +1,6 @@
 use std::{collections::HashSet, ops::ControlFlow};
 
-use advent_of_code::{ascii_map_size, parse_ascii_map, Dir, MapSize};
+use advent_of_code::{ascii_map_size, parse_ascii_map_ivec, Dir, MapSize};
 use glam::IVec2 as Pos;
 
 advent_of_code::solution!();
@@ -17,7 +17,7 @@ fn parse(input: &str) -> Input {
     let mut obstacles = HashSet::new();
     let mut start_pos = None;
 
-    parse_ascii_map(input).for_each(|(pos, c)| match c {
+    parse_ascii_map_ivec(input).for_each(|(pos, c)| match c {
         b'#' => {
             obstacles.insert(pos);
         }
