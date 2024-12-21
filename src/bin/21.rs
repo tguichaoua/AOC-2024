@@ -1,3 +1,5 @@
+#![allow(dead_code, unused_variables)]
+
 use advent_of_code::{Dir, Horizontal, Vertical};
 use glam::{uvec2, UVec2};
 
@@ -29,7 +31,7 @@ enum Movement {
 }
 
 fn parse_numerical_sequence(input: &[u8]) -> impl Iterator<Item = NumericButton> + '_ {
-    input.into_iter().copied().map(|b| match b {
+    input.iter().copied().map(|b| match b {
         b'A' => NumericButton::A,
         b'0' => NumericButton::N0,
         b'1' => NumericButton::N1,
@@ -162,8 +164,8 @@ fn compute_sequence_for_numerical_keyboard(
 fn compute_sequence_for_directional_keyboard(
     sequence: impl IntoIterator<Item = Node>,
 ) -> Vec<Node> {
-    let mut nodes = Vec::new();
-    let mut current_position = DirectionalButton::A.pos();
+    let nodes = Vec::new();
+    let current_position = DirectionalButton::A.pos();
 
     for Node { movement, press_a } in sequence {
         match movement {
