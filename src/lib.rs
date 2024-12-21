@@ -154,6 +154,18 @@ pub enum Dir {
     Left,
 }
 
+#[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
+pub enum Horizontal {
+    Left,
+    Right,
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
+pub enum Vertical {
+    Up,
+    Down,
+}
+
 #[allow(non_upper_case_globals)]
 impl Dir {
     pub const North: Dir = Dir::Up;
@@ -218,6 +230,24 @@ impl Dir {
     #[inline]
     pub fn is_vertical(self) -> bool {
         matches!(self, Dir::Up | Dir::Down)
+    }
+}
+
+impl From<Horizontal> for Dir {
+    fn from(value: Horizontal) -> Self {
+        match value {
+            Horizontal::Left => Dir::Left,
+            Horizontal::Right => Dir::Right,
+        }
+    }
+}
+
+impl From<Vertical> for Dir {
+    fn from(value: Vertical) -> Self {
+        match value {
+            Vertical::Up => Dir::Up,
+            Vertical::Down => Dir::Down,
+        }
     }
 }
 
